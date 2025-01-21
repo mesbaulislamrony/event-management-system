@@ -1,0 +1,16 @@
+{
+    "name": "mesbaul/event-management-system",
+    "description": "Simple event management application",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Mesbaul Islam"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
