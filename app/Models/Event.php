@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use PDO;
 
 class Event
@@ -15,12 +16,21 @@ class Event
 
     public function create($array)
     {
-        $query = "INSERT INTO events (title, description, date) VALUES (:title, :description, :date)";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':title', $array['title']);
-        $stmt->bindParam(':description', $array['description']);
-        $stmt->bindParam(':date', $array['date']);
-        return $stmt->execute();
+        try {
+            $user_id = 3;
+            $array['datetime'] = Carbon::parse($array['datetime'])->format('Y-m-d H:i:s');
+            $query = "INSERT INTO events (title, description, hosted_by, datetime, price, created_by) VALUES (:title, :description, :hosted_by, :datetime, :price, :created_by)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':title', $array['title']);
+            $stmt->bindParam(':description', $array['description']);
+            $stmt->bindParam(':hosted_by', $array['hosted_by']);
+            $stmt->bindParam(':datetime', $array['datetime']);
+            $stmt->bindParam(':price', $array['price']);
+            $stmt->bindParam(':created_by', $user_id);
+            $stmt->execute();
+        } catch(PDOException $e) {
+            echo "Error: " . $e->getMessage();
+          }
     }
 
     public function getAll()
@@ -40,11 +50,13 @@ class Event
 
     public function update($id, $array)
     {
-        $query = "UPDATE events SET title = :title, description = :description, date = :date WHERE id = :id";
+        $query = "UPDATE events SET title = :title, description = :description, hosted_by = :hosted_by, datetime = :datetime, price = :price WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':title', $array['title']);
         $stmt->bindParam(':description', $array['description']);
-        $stmt->bindParam(':date', $array['date']);
+        $stmt->bindParam(':hosted_by', $array['hosted_by']);
+        $stmt->bindParam(':datetime', $array['datetime']);
+        $stmt->bindParam(':price', $array['price']);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Event;
+use Carbon\Carbon;
 
 class EventController
 {
@@ -27,7 +28,7 @@ class EventController
     public function delete($id)
     {
         $this->eventModel->delete($id);
-        header("Location: /events/list.php");
+        header("Location: /events/index.php");
     }
 
     public function update($id, $array)
@@ -36,8 +37,15 @@ class EventController
         header("Location: /events/edit.php?id=" . $id);
     }
 
-    public function show($id)
+    public function edit($id)
     {
         return $this->eventModel->find($id);
+    }
+
+    public function show($id)
+    {
+        $event = $this->eventModel->find($id);
+        $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
+        return $event;
     }
 }
