@@ -16,19 +16,19 @@ class User
     public function register($array)
     {
         $array['password'] = password_hash($array['password'], PASSWORD_BCRYPT);
-        $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+        $query = "INSERT INTO users (name, mobile_no, password) VALUES (:name, :mobile_no, :password)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':name', $array['name']);
-        $stmt->bindParam(':email', $array['email']);
+        $stmt->bindParam(':mobile_no', $array['mobile_no']);
         $stmt->bindParam(':password', $array['password']);
         return $stmt->execute();
     }
 
-    public function findByEmail($email)
+    public function findByMobileNo($mobile_no)
     {
-        $query = "SELECT * FROM users WHERE email = :email";
+        $query = "SELECT * FROM users WHERE mobile_no = :mobile_no";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':mobile_no', $mobile_no);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

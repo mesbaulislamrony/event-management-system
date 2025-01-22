@@ -1,11 +1,11 @@
 <?php
-require '../layouts/header.php';
 require '../bootstrap.php';
+require '../layouts/header.php';
 
 use App\Controllers\EventController;
 use App\Middleware\Middleware;
 
-Middleware::guest();
+Middleware::auth();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $eventController = new EventController($db);
@@ -17,9 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         <div class="card-body px-0">
             <h5 class="card-title"><?= $event['title'] ?></h5>
             <p class="card-text"><?= $event['description'] ?></p>
-            <p class="card-text">Hosted By : <?= $event['hosted_by'] ?></p>
-            <p class="mb-2 text-uppercase"><?= $event['datetime'] ?></p>
-            <p class="mb-2 text-uppercase"><span class="badge text-bg-dark">5 Going</span></p>
+            <p class="mb-1">Hosted By : <?= $event['hosted_by'] ?></p>
+            <p class="mb-1">Datetime : <span class="text-uppercase"><?= $event['datetime'] ?><span></p>
+            <p class="mb-1">Capacity : <?= $event['capacity'] ?></p>
+            <p class="mb-4 text-uppercase"><span class="badge text-bg-dark"><?= $event['available'] ?> Seat available</span></p>
             <a href="/events/edit.php?id=<?= $event["id"] ?>" class="btn btn-primary">Edit</a>
             <form method="POST" action="/events/delete.php" class="d-inline">
                 <input type="hidden" name="id" value="<?= $event["id"] ?>">

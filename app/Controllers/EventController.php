@@ -22,7 +22,12 @@ class EventController
 
     public function list()
     {
-        return $this->eventModel->getAll();
+        $events = $this->eventModel->getAll();
+        return array_map(function ($event) {
+            $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
+            $event['available'] = ($event['capacity'] - $event['available']);
+            return $event;
+        }, $events);
     }
 
     public function delete($id)
@@ -45,7 +50,9 @@ class EventController
     public function show($id)
     {
         $event = $this->eventModel->find($id);
+        $available = $this->eventModel->userHasEvents($id);
         $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
+        $event['available'] = ($event['capacity'] - $available['total']);
         return $event;
     }
 }

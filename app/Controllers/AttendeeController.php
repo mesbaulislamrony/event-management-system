@@ -3,34 +3,38 @@
 namespace App\Controllers;
 
 use App\Models\Attendee;
-use App\Models\Event;
-use Carbon\Carbon;
+use App\Models\User;
 
 class AttendeeController
 {
     private $attendeeModel;
-    private $eventModel;
+    private $userModel;
 
     public function __construct($db)
     {
         $this->attendeeModel = new Attendee($db);
-        $this->eventModel = new Event($db);
+        $this->userModel = new User($db);
     }
 
     public function register($id, $array)
     {
-        $attendee = $this->attendeeModel->findByMobileNo($array['mobile_no']);
-        if(empty($attendee)){
-            $this->attendeeModel->register($array);
+        if (!empty($_SESSION)) {
+            $array = $array + $_SESSION['user'];
         }
 
-        if(!$this->attendeeModel->checkAlreadyExists($event_id, $attendee_id))
-        {
-            header("Location: /join.php?id=" . $id);
+        $attendee = $this->userModel->findByMobileNo($array['mobile_no']);
+        if (empty($attendee)) {
+            $this->userModel->register($array);
+            $_SESSION['user'] = $attendee;
         }
+        $attendee = $this->userModel->findByMobileNo($array['mobile_no']);
 
-        $attendee = $this->attendeeModel->findByMobileNo($array['mobile_no']);
-        $this->attendeeModel->join($id, $attendee['id']);
+        $this->attendeeModel->join($id, $attendee['id'], $array);
         header("Location: /join.php?id=" . $id);
+    }
+
+    public function tickets($id)
+    {
+        return $this->attendeeModel->noOftickets($id);
     }
 }

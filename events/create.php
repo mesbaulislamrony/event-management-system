@@ -1,11 +1,11 @@
 <?php
-require '../layouts/header.php';
 require '../bootstrap.php';
+require '../layouts/header.php';
 
 use App\Controllers\EventController;
 use App\Middleware\Middleware;
 
-Middleware::guest();
+Middleware::auth();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eventController = new EventController($db);
@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="limit" class="form-label">Seat Limits</label>
-                                <input type="number" name="limit" class="form-control" id="limit" placeholder="Write seat limits">
+                                <label for="capacity" class="form-label">Seat Capacity</label>
+                                <input type="number" name="capacity" class="form-control" id="capacity" placeholder="Write seat capacity">
                             </div>
                         </div>
                     </div>

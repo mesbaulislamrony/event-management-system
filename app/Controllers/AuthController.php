@@ -13,12 +13,13 @@ class AuthController
         $this->userModel = new User($db);
     }
 
-    public function login($email, $password)
+    public function login($mobile_no, $password)
     {
-        $user = $this->userModel->findByEmail($email);
+        $user = $this->userModel->findByMobileNo($mobile_no);
 
         if ($user && password_verify($password, $user['password'])) {
-            header("Location: /events/list.php");
+            $_SESSION['user'] = $user;
+            header("Location: /events/index.php");
         }
         header("Location: /index.php");
     }
@@ -26,10 +27,11 @@ class AuthController
     public function register($array)
     {
         $this->userModel->register($array);
-        $user = $this->userModel->findByEmail($array['email']);
+        $user = $this->userModel->findByMobileNo($array['mobile_no']);
 
         if ($user && password_verify($array['password'], $user['password'])) {
-            header("Location: /events/list.php");
+            $_SESSION['user'] = $user;
+            header("Location: /events/index.php");
         }
         header("Location: /index.php");
     }

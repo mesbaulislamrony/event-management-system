@@ -1,8 +1,11 @@
 <?php
-require '../layouts/header.php';
 require '../bootstrap.php';
+require '../layouts/header.php';
 
 use App\Controllers\AuthController;
+use App\Middleware\Middleware;
+
+Middleware::guest();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $authController = new AuthController($db);
@@ -22,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="text" class="form-control" name="name" id="name" placeholder="Your full name">
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" name="email" id="email" placeholder="Your email address">
+                        <label for="mobile_no" class="form-label">Mobile no</label>
+                        <input type="text" class="form-control" name="mobile_no" id="mobile_no" placeholder="Your mobile no">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>

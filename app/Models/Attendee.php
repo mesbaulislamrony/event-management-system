@@ -14,41 +14,25 @@ class Attendee
         $this->conn = $db;
     }
 
-    public function register($array)
-    {
-        $query = "INSERT INTO attendees (name, mobile_no) VALUES (:name, :mobile_no)";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':name', $array['name']);
-        $stmt->bindParam(':mobile_no', $array['mobile_no']);
-        return $stmt->execute();
-    }
-
-    public function join($event_id, $attendee_id)
+    public function join($event_id, $attendee_id, $array)
     {
         $today = Carbon::now()->format('Y-m-d H:i:s');
-        $query = "INSERT INTO attendee_has_events (attendee_id, event_id, registration_at) VALUES (:attendee_id, :event_id, :registration_at)";
+        $query = "INSERT INTO user_has_events (user_id, event_id, registered_at, no_of_person) VALUES (:user_id, :event_id, :registered_at, :no_of_person)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':attendee_id', $attendee_id);
+        $stmt->bindParam(':user_id', $attendee_id);
         $stmt->bindParam(':event_id', $event_id);
-        $stmt->bindParam(':registration_at', $today);
+        $stmt->bindParam(':registered_at', $today);
+        $stmt->bindParam(':no_of_person', $array['no_of_person']);
         return $stmt->execute();
     }
 
-    public function findByMobileNo($mobile_no)
+    public function noOftickets($id)
     {
-        $query = "SELECT * FROM attendees WHERE mobile_no = :mobile_no";
+        $user_id = $_SESSION['user']['id'];
+        $query = "SELECT IFNULL(SUM(user_has_events.no_of_person), 0) as total FROM user_has_events WHERE event_id = :event_id AND user_id = :user_id";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':mobile_no', $mobile_no);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function checkAlreadyExists($event_id, $attendee_id)
-    {
-        $query = "SELECT * FROM attendee_has_events WHERE event_id = :event_id AND attendee_id = :attendee_id";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':event_id', $event_id);
-        $stmt->bindParam(':attendee_id', $attendee_id);
+        $stmt->bindParam(':event_id', $id);
+        $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

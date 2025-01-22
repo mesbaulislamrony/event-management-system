@@ -6,17 +6,15 @@ class Middleware
 {
     public static function auth()
     {
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: /login.php");
-            exit;
+        if (empty($_SESSION)) {
+            header("Location: /auth/login.php");
         }
     }
 
     public static function guest()
     {
-        if (isset($_SESSION['user_id'])) {
-            header("Location: /dashboard.php");
-            exit;
+        if (!empty($_SESSION)) {
+            header("Location: /events/index.php");
         }
     }
 }

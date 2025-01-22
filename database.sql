@@ -1,35 +1,29 @@
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
+    mobile_no VARCHAR(20) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(150) NOT NULL,
+    title VARCHAR(100) NOT NULL,
     description TEXT,
-    hosted_by VARCHAR(150) NOT NULL,
-    date DATE NOT NULL,
+    hosted_by VARCHAR(100) NOT NULL,
+    datetime DATETIME NOT NULL,
+    capacity INT NOT NULL,
     created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES users(id)
+    updated_at TIMESTAMP DEFAULT NULL
 );
 
-CREATE TABLE event_attendees (
+CREATE TABLE user_has_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    event_id INT,
-    attendee_name VARCHAR(100),
-    attendee_email VARCHAR(100),
-    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (event_id) REFERENCES events(id)
-);
-
-CREATE TABLE sessions (
-    id VARCHAR(128) PRIMARY KEY,
     user_id INT NOT NULL,
-    data TEXT,
-    last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    event_id INT NOT NULL,
+    registered_at DATETIME NOT NULL,
+    no_of_person INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
