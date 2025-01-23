@@ -32,16 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         <div class="card-header border-0 bg-transparent">Please fillup form to join this event</div>
                         <form method="POST" action="" class="card-body">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Full name</label>
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Your full name">
+                                <label for="name" class="form-label">Full name*</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Your full name" required>
                             </div>
                             <div class="mb-3">
-                                <label for="mobile_no" class="form-label">Mobile no</label>
-                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" placeholder="Your mobile no">
+                                <label for="mobile_no" class="form-label">Mobile no*</label>
+                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" placeholder="Your mobile no" required>
                             </div>
                             <div class="mb-3">
-                                <label for="no_of_person" class="form-label">No of person</label>
-                                <input type="number" class="form-control" name="no_of_person" id="no_of_person" placeholder="Type no of person">
+                                <label for="no_of_person" class="form-label">No of person*</label>
+                                <input type="number" class="form-control" name="no_of_person" id="no_of_person" placeholder="Type no of person" required>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>

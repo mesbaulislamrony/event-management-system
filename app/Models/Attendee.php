@@ -60,4 +60,14 @@ class Attendee
         $stmt->bindParam(':event_id', $id);
         $stmt->execute();
     }
+
+    public function csv($id)
+    {
+        $query = "SELECT attendees.name, attendees.mobile_no, attendee_events.no_of_person FROM attendees 
+        INNER JOIN attendee_events ON attendees.id = attendee_events.attendee_id WHERE attendee_events.event_id = :event_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':event_id', $id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

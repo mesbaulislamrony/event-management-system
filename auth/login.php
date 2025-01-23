@@ -23,12 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="card-header border-0 bg-transparent">Login</div>
                 <form method="POST" action="" class="card-body">
                     <div class="mb-3">
-                        <label for="mobile_no" class="form-label">Mobile no</label>
-                        <input type="text" class="form-control" name="mobile_no" id="mobile_no" placeholder="Your mobile no">
+                        <label for="mobile_no" class="form-label">Mobile no*</label>
+                        <input type="text" class="form-control" name="mobile_no" id="mobile_no" placeholder="Your mobile no" required>
                     </div>
                     <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Your password">
+                        <label for="password" class="form-label">Password*</label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Your password" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

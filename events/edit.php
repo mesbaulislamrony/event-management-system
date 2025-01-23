@@ -25,28 +25,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 <div class="card-header border-0 bg-transparent">Edit event</div>
                 <form method="POST" action="" class="card-body">
                     <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control" name="title" value="<?= $event['title'] ?>" id="title" placeholder="Write title">
+                        <label for="title" class="form-label">Title*</label>
+                        <input type="text" class="form-control" name="title" value="<?= $event['title'] ?>" id="title" placeholder="Write title" required>
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <textarea class="form-control" name="description" id="description" placeholder="Write description"><?= $event['description'] ?></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="hosted_by" class="form-label">Hosted By</label>
-                        <input type="text" class="form-control" name="hosted_by" value="<?= $event['hosted_by'] ?>" id="hosted_by" placeholder="Write host name">
+                        <label for="hosted_by" class="form-label">Hosted By*</label>
+                        <input type="text" class="form-control" name="hosted_by" value="<?= $event['hosted_by'] ?>" id="hosted_by" placeholder="Write host name" required>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="datetime" class="form-label">Event datetime</label>
-                                <input type="datetime-local" name="datetime" value="<?= $event['datetime'] ?>" class="form-control" id="datetime">
+                                <label for="datetime" class="form-label">Event datetime*</label>
+                                <input type="datetime-local" name="datetime" value="<?= $event['datetime'] ?>" class="form-control" id="datetime" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="capacity" class="form-label">Seat Capacity</label>
-                                <input type="number" name="capacity" value="<?= $event['capacity'] ?>" class="form-control" id="capacity" placeholder="Write seat capacity">
+                                <label for="capacity" class="form-label">Seat Capacity*</label>
+                                <input type="number" name="capacity" value="<?= $event['capacity'] ?>" class="form-control" id="capacity" placeholder="Write seat capacity" required>
                             </div>
                         </div>
                     </div>
