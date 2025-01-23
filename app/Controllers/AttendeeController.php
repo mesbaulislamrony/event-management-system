@@ -18,23 +18,9 @@ class AttendeeController
 
     public function register($id, $array)
     {
-        if (!empty($_SESSION)) {
-            $array = $array + $_SESSION['user'];
-        }
-
-        $attendee = $this->userModel->findByMobileNo($array['mobile_no']);
-        if (empty($attendee)) {
-            $this->userModel->register($array);
-            $_SESSION['user'] = $attendee;
-        }
-        $attendee = $this->userModel->findByMobileNo($array['mobile_no']);
-
-        $this->attendeeModel->join($id, $attendee['id'], $array);
+        $this->attendeeModel->register($array);
+        $attendee = $this->attendeeModel->findByMobileNo($array['mobile_no']);
+        $this->attendeeModel->join($id, $attendee, $array);
         header("Location: /join.php?id=" . $id);
-    }
-
-    public function tickets($id)
-    {
-        return $this->attendeeModel->noOftickets($id);
     }
 }

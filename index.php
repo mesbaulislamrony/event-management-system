@@ -27,7 +27,7 @@ $result = $homeController->index();
             <div class="card border-0">
                 <div class="card-body px-0 <?= $key % 2 == 0 ? 'text-start' : 'text-end' ?>">
                     <h5 class="card-title"><?= $row["title"] ?></h5>
-                    <p class="card-text">Hosted By : <?= $row["hosted_by"] ?></p>
+                    <p class="card-text mb-0">Hosted By : <?= $row["hosted_by"] ?></p>
                     <p class="mb-2 text-uppercase"><?= $row["datetime"] ?></p>
                     <p class="mb-2 text-uppercase"><span class="badge text-bg-dark"><?= $row['available'] ?> Seat available</span></p>
                     <a href="/join.php?id=<?= $row["id"] ?>" class="btn btn-primary">Join Now</a>

@@ -8,7 +8,7 @@ use App\Middleware\Middleware;
 Middleware::auth();
 
 $eventController = new EventController($db);
-$result = $eventController->list();
+$result = $eventController->index();
 
 ?>
 <section class="container">
@@ -36,8 +36,6 @@ $result = $eventController->list();
                         <td><?= $row["available"] ?></td>
                         <td class="text-end">
                             <a href='/events/show.php?id=<?= $row["id"] ?>'>Show</a>
-                            <span>&nbsp;||&nbsp;</span>
-                            <a href='/events/edit.php?id=<?= $row["id"] ?>'>Edit</a>
                         </td>
                     </tr>
                 <?php } ?>

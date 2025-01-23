@@ -15,6 +15,7 @@ class User
 
     public function register($array)
     {
+        $array['password'] = (array_key_exists('password', $array)) ? $array['password'] : "12345678";
         $array['password'] = password_hash($array['password'], PASSWORD_BCRYPT);
         $query = "INSERT INTO users (name, mobile_no, password) VALUES (:name, :mobile_no, :password)";
         $stmt = $this->conn->prepare($query);

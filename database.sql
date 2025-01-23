@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -7,6 +8,7 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT NULL
 );
 
+DROP TABLE IF EXISTS events;
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
@@ -19,11 +21,21 @@ CREATE TABLE events (
     updated_at TIMESTAMP DEFAULT NULL
 );
 
-CREATE TABLE user_has_events (
+DROP TABLE IF EXISTS attendees;
+CREATE TABLE attendees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    mobile_no VARCHAR(20) UNIQUE NOT NULL,
+    registered_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS attendee_events;
+CREATE TABLE attendee_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     event_id INT NOT NULL,
-    registered_at DATETIME NOT NULL,
     no_of_person INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

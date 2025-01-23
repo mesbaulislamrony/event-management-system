@@ -3,15 +3,18 @@
 namespace App\Controllers;
 
 use App\Models\Event;
+use App\Models\Attendee;
 use Carbon\Carbon;
 
 class EventController
 {
     private $eventModel;
+    private $attendeeModel;
 
     public function __construct($db)
     {
         $this->eventModel = new Event($db);
+        $this->attendeeModel = new Attendee($db);
     }
 
     public function create($array)
@@ -20,19 +23,19 @@ class EventController
         header("Location: /events/create.php");
     }
 
-    public function list()
+    public function index()
     {
-        $events = $this->eventModel->getAll();
+        $events = $this->eventModel->index();
         return array_map(function ($event) {
             $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
-            $event['available'] = ($event['capacity'] - $event['available']);
+            $event['available'] = ($event['capacity'] - $event['total']);
             return $event;
         }, $events);
     }
 
     public function delete($id)
     {
-        $this->eventModel->delete($id);
+        $this->eventModel->destroy($id);
         header("Location: /events/index.php");
     }
 
@@ -50,9 +53,8 @@ class EventController
     public function show($id)
     {
         $event = $this->eventModel->find($id);
-        $available = $this->eventModel->userHasEvents($id);
         $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
-        $event['available'] = ($event['capacity'] - $available['total']);
+        $event['available'] = ($event['capacity'] - $event['total']);
         return $event;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use PDO;
+use Carbon\Carbon;
 
 class Attendee
 {
@@ -14,26 +14,50 @@ class Attendee
         $this->conn = $db;
     }
 
-    public function join($event_id, $attendee_id, $array)
+    public function register($array)
     {
         $today = Carbon::now()->format('Y-m-d H:i:s');
-        $query = "INSERT INTO user_has_events (user_id, event_id, registered_at, no_of_person) VALUES (:user_id, :event_id, :registered_at, :no_of_person)";
+        $query = "INSERT INTO attendees (name, mobile_no, registered_at) VALUES (:name, :mobile_no, :registered_at)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':user_id', $attendee_id);
-        $stmt->bindParam(':event_id', $event_id);
+        $stmt->bindParam(':name', $array['name']);
+        $stmt->bindParam(':mobile_no', $array['mobile_no']);
         $stmt->bindParam(':registered_at', $today);
+        return $stmt->execute();
+    }
+
+    public function join($event_id, $attendee, $array)
+    {
+        $query = "INSERT INTO attendee_events (attendee_id, event_id, no_of_person) VALUES (:attendee_id, :event_id, :no_of_person)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':attendee_id', $attendee['id']);
+        $stmt->bindParam(':event_id', $event_id);
         $stmt->bindParam(':no_of_person', $array['no_of_person']);
         return $stmt->execute();
     }
 
-    public function noOftickets($id)
+    public function findByMobileNo($mobile_no)
     {
-        $user_id = $_SESSION['user']['id'];
-        $query = "SELECT IFNULL(SUM(user_has_events.no_of_person), 0) as total FROM user_has_events WHERE event_id = :event_id AND user_id = :user_id";
+        $query = "SELECT * FROM attendees WHERE mobile_no = :mobile_no";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':event_id', $id);
-        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':mobile_no', $mobile_no);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function delete($id)
+    {
+        $query = "SELECT attendee_events.attendee_id FROM attendee_events WHERE event_id = :event_id";
+        $stmt = $this->conn->query($query);
+        $stmt->bindParam(':event_id', $id);
+        $attendee_events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $query = "DELETE FROM attendees WHERE id IN " . implode(',', array_column($attendee_events, 'attendee_id'));
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        $query = "DELETE FROM attendee_events WHERE event_id = :event_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':event_id', $id);
+        $stmt->execute();
     }
 }

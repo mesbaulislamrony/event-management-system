@@ -7,10 +7,16 @@ use App\Middleware\Middleware;
 
 Middleware::auth();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $eventController = new EventController($db);
+    $event = $eventController->delete($_POST['id']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $eventController = new EventController($db);
     $event = $eventController->show($_GET['id']);
 }
+
 ?>
 <section class="container">
     <div class="card border-0" style="margin:50px 0">
@@ -22,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             <p class="mb-1">Capacity : <?= $event['capacity'] ?></p>
             <p class="mb-4 text-uppercase"><span class="badge text-bg-dark"><?= $event['available'] ?> Seat available</span></p>
             <a href="/events/edit.php?id=<?= $event["id"] ?>" class="btn btn-primary">Edit</a>
-            <form method="POST" action="/events/delete.php" class="d-inline">
+            <form method="POST" action="" class="d-inline">
                 <input type="hidden" name="id" value="<?= $event["id"] ?>">
                 <button type="submit" class="btn btn-danger">Delete</a>
             </form>
