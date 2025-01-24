@@ -1,7 +1,3 @@
--- Create database if not exists
-CREATE DATABASE IF NOT EXISTS eventshub;
-USE eventshub;
-
 -- Users table
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
@@ -13,6 +9,9 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_mobile_no (mobile_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- default user
+INSERT INTO users (name, mobile_no, password) VALUES ('John Doe', '01700000000', 'password');
 
 -- Events table
 DROP TABLE IF EXISTS events;
