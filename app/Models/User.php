@@ -15,6 +15,12 @@ class User
 
     public function register($array)
     {
+        // Check if mobile number already exists
+        if (!empty($this->findByMobileNo($array['mobile_no']))) {
+            return false;
+            exit();
+        }
+
         $array['password'] = (array_key_exists('password', $array)) ? $array['password'] : "12345678";
         $array['password'] = password_hash($array['password'], PASSWORD_BCRYPT);
         $query = "INSERT INTO users (name, mobile_no, password) VALUES (:name, :mobile_no, :password)";

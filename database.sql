@@ -34,7 +34,7 @@ CREATE TABLE attendees (
 DROP TABLE IF EXISTS attendee_events;
 CREATE TABLE attendee_events (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    attendee_id INT NOT NULL,
     event_id INT NOT NULL,
     no_of_person INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

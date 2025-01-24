@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Event Management System</title>
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -20,23 +21,19 @@
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="/events/index.php">Your Events</a>
                     </li>
-                    <?php if (empty($_SESSION)) { ?>
+                    <?php if (!empty($_SESSION) && array_key_exists('user', $_SESSION)) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/auth/logout.php">Logout</a>
+                        </li>
+                    <?php } else { ?>
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="/auth/login.php">Login</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="/auth/register.php">Register</a>
                         </li>
-                    <?php } else { ?>
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/auth/logout.php">Logout</a>
-                        </li>
                     <?php } ?>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
         </div>
     </nav>

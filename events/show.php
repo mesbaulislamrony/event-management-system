@@ -29,11 +29,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             <p class="mb-4 text-uppercase"><span class="badge text-bg-dark"><?= $event['available'] ?> Seat available</span></p>
             <a href="/events/edit.php?id=<?= $event["id"] ?>" class="btn btn-primary">Edit</a>
             <a href="/events/csv.php?id=<?= $event["id"] ?>" class="btn btn-success">Download Attendee CSV</a>
-            <form method="POST" action="" class="d-inline">
+            <form id="deleteForm" method="POST" action="" class="d-inline" onsubmit="return confirmDelete()">
                 <input type="hidden" name="id" value="<?= $event["id"] ?>">
-                <button type="submit" class="btn btn-danger">Delete</a>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
     </div>
 </section>
+<script>
+function confirmDelete() {
+    return confirm('Are you sure you want to delete this event? This action cannot be undone.');
+}
+</script>
 <?php require '../layouts/footer.php'; ?>

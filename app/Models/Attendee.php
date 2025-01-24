@@ -61,12 +61,15 @@ class Attendee
         $stmt->execute();
     }
 
-    public function csv($id)
+    public function findByEventId($event_id)
     {
-        $query = "SELECT attendees.name, attendees.mobile_no, attendee_events.no_of_person FROM attendees 
-        INNER JOIN attendee_events ON attendees.id = attendee_events.attendee_id WHERE attendee_events.event_id = :event_id";
+        $query = "SELECT a.name, a.mobile_no, ae.no_of_person 
+                 FROM attendees a 
+                 JOIN attendee_events ae ON a.id = ae.attendee_id 
+                 WHERE ae.event_id = :event_id 
+                 ORDER BY ae.created_at DESC";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':event_id', $id);
+        $stmt->bindParam(':event_id', $event_id);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

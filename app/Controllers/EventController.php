@@ -25,12 +25,25 @@ class EventController
 
     public function index()
     {
-        $events = $this->eventModel->index();
-        return array_map(function ($event) {
-            $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
-            $event['available'] = ($event['capacity'] - $event['total']);
-            return $event;
-        }, $events);
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $perPage = 5;
+        $offset = ($page - 1) * $perPage;
+        
+        $events = $this->eventModel->paginate($offset, $perPage);
+        $total = $this->eventModel->count();
+        $totalPages = ceil($total / $perPage);
+        
+        return [
+            'events' => array_map(function ($event) {
+                $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
+                $event['available'] = ($event['capacity'] - $event['total']);
+                return $event;
+            }, $events),
+            'currentPage' => $page,
+            'totalPages' => $totalPages,
+            'perPage' => $perPage,
+            'total' => $total
+        ];
     }
 
     public function delete($id)

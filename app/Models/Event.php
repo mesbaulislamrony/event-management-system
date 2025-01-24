@@ -28,14 +28,6 @@ class Event
         $stmt->execute();
     }
 
-    public function index()
-    {
-        $query = "SELECT events.id, title, description, hosted_by, datetime, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
-        LEFT JOIN attendee_events ON attendee_events.event_id = events.id WHERE events.created_by = " . $_SESSION['user']['id'] . " GROUP BY events.id ORDER BY events.id DESC";
-        $stmt = $this->conn->query($query);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function destroy($id)
     {
         $query = "SELECT attendee_id FROM attendee_events WHERE event_id = " . $id;
@@ -81,5 +73,28 @@ class Event
         $stmt->bindParam(':created_by', $_SESSION['user']['id']);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function paginate($offset, $perPage)
+    {
+        $query = "SELECT events.*, COUNT(attendee_events.id) as total FROM events 
+        LEFT JOIN attendee_events ON events.id = attendee_events.event_id 
+        GROUP BY events.id 
+        ORDER BY events.datetime DESC 
+        LIMIT :limit OFFSET :offset";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function count()
+    {
+        $query = "SELECT COUNT(*) as total FROM events";
+        $stmt = $this->conn->query($query);
+        return (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
 }

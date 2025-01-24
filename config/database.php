@@ -4,6 +4,6 @@ return [
         'host' => 'localhost',
         'name' => 'eventshub',
         'user' => 'root',
-        'password' => 'm00nta$!ra',
+        'password' => 'password',
     ],
 ];
