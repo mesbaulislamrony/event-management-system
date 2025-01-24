@@ -50,62 +50,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </section>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('#registerForm');
+function showError(input, errorElement, message) {
+    input.classList.add('is-invalid');
+    errorElement.textContent = message;
+    errorElement.classList.remove('d-none');
+}
+
+function hideError(input, errorElement) {
+    input.classList.remove('is-invalid');
+    errorElement.classList.add('d-none');
+}
+
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    let hasErrors = false;
+    
+    // Name validation
     const nameInput = document.getElementById('name');
+    if (!nameInput.value.trim()) {
+        showError(nameInput, document.getElementById('name-error'), 'Full name is required');
+        hasErrors = true;
+    } else {
+        hideError(nameInput, document.getElementById('name-error'));
+    }
+    
+    // Mobile validation
     const mobileInput = document.getElementById('mobile');
+    if (!mobileInput.value.trim()) {
+        showError(mobileInput, document.getElementById('mobile-error'), 'Mobile no is required');
+        hasErrors = true;
+    } else if (mobileInput.value.length < 11) {
+        showError(mobileInput, document.getElementById('mobile-error'), 'Mobile no must be at least 11 characters long');
+        hasErrors = true;
+    } else {
+        hideError(mobileInput, document.getElementById('mobile-error'));
+    }
+    
+    // Password validation
     const passwordInput = document.getElementById('password');
-
-    // Show error message function
-    const showError = (element, errorDiv, message) => {
-        element.classList.add('is-invalid');
-        errorDiv.textContent = message;
-        errorDiv.classList.remove('d-none');
-    };
-
-    // Hide error message function
-    const hideError = (element, errorDiv) => {
-        element.classList.remove('is-invalid');
-        errorDiv.classList.add('d-none');
-    };
-
-    form.addEventListener('submit', function(e) {
-        let hasErrors = false;
-
-        // Reset all error messages
-        const errorDivs = document.querySelectorAll('.error-message');
-        errorDivs.forEach(err => {
-            err.classList.add('d-none');
-        });
-
-        // Name validation
-        if (!nameInput.value.trim()) {
-            showError(nameInput, document.getElementById('name-error'), 'Name is required');
-            hasErrors = true;
-        } else {
-            hideError(nameInput, document.getElementById('name-error'));
-        }
-
-        // Mobile no validation
-        if (!mobileInput.value.trim()) {
-            showError(mobileInput, document.getElementById('mobile-error'), 'Mobile no is required');
-            hasErrors = true;
-        } else {
-            hideError(mobileInput, document.getElementById('mobile-error'));
-        }
-
-        // Password validation
-        if (!passwordInput.value.trim()) {
-            showError(passwordInput, document.getElementById('password-error'), 'Password is required');
-            hasErrors = true;
-        } else {
-            hideError(passwordInput, document.getElementById('password-error'));
-        }
-
-        if (hasErrors) {
-            e.preventDefault();
-        }
-    });
+    if (!passwordInput.value) {
+        showError(passwordInput, document.getElementById('password-error'), 'Password is required');
+        hasErrors = true;
+    } else if (passwordInput.value.length < 6) {
+        showError(passwordInput, document.getElementById('password-error'), 'Password must be at least 6 characters long');
+        hasErrors = true;
+    } else {
+        hideError(passwordInput, document.getElementById('password-error'));
+    }
+    
+    if (hasErrors) {
+        e.preventDefault();
+    }
 });
 </script>
 <?php include_once '../layouts/footer.php'; ?>

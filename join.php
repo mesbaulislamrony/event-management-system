@@ -103,6 +103,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!mobileInput.value.trim()) {
             showError(mobileInput, document.getElementById('mobile-error'), 'Mobile no is required');
             hasErrors = true;
+        } else if (mobileInput.value.length < 11) {
+            showError(mobileInput, document.getElementById('mobile-error'), 'Mobile no must be at least 11 characters long');
+            hasErrors = true;
         } else {
             hideError(mobileInput, document.getElementById('mobile-error'));
         }
@@ -110,6 +113,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // No of person validation
         if (!personInput.value.trim()) {
             showError(personInput, document.getElementById('person-error'), 'No of person is required');
+            hasErrors = true;
+        } else if (personInput.value.length < 1) {
+            showError(personInput, document.getElementById('person-error'), 'No of person must be at least 1 characters long');
             hasErrors = true;
         } else {
             const number = parseInt(personInput.value);
