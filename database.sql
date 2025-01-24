@@ -11,7 +11,7 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- default user
-INSERT INTO users (name, mobile_no, password) VALUES ('John Doe', '01700000000', '$2y$10$CofyLzwKzcSx1LbttHKaNe/tjdDfZqCYsjj.zwDUC9TD2c8XB1Kp6');
+INSERT INTO users (name, mobile_no, password) VALUES ('John Doe', '01717171717', '$2y$10$CofyLzwKzcSx1LbttHKaNe/tjdDfZqCYsjj.zwDUC9TD2c8XB1Kp6');
 
 -- Events table
 DROP TABLE IF EXISTS events;
