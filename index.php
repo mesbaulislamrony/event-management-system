@@ -6,7 +6,7 @@ use App\Controllers\HomeController;
 
 $homeController = new HomeController($db);
 $result = $homeController->index();
-
+$searchKeyword = isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
 ?>
 <section class="container">
     <div class="row">
@@ -20,7 +20,9 @@ $result = $homeController->index();
 </section>
 <section class="container">
     <div class="jumbotron">
-        <h3>Upcoming online events</h3>
+        <h3>
+            <?= $searchKeyword ? 'Search Results for: "' . $searchKeyword . '"' : 'Upcoming online events' ?>
+        </h3>
     </div>
     <?php if (count($result) > 0) { ?>
         <?php foreach ($result as $key => $row) { ?>
@@ -36,7 +38,7 @@ $result = $homeController->index();
         <?php } ?>
     <?php } ?>
     <?php if (count($result) == 0) { ?>
-        <p>No events found.</p>
+        <p>No events found<?= $searchKeyword ? ' for "' . $searchKeyword . '"' : '' ?>.</p>
     <?php } ?>
 </section>
 <?php include_once 'layouts/footer.php'; ?>

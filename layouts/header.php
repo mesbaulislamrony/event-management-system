@@ -34,6 +34,10 @@
                         </li>
                     <?php } ?>
                 </ul>
+                <form action="/../index.php" method="GET" class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" name="search" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>" placeholder="Search events..." aria-label="Search" />
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
             </div>
         </div>
     </nav>

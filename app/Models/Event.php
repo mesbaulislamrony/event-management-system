@@ -14,7 +14,7 @@ class Event
         $this->conn = $db;
     }
 
-    public function create($array)
+    public function store($array)
     {
         $array['datetime'] = Carbon::parse($array['datetime'])->format('Y-m-d H:i:s');
         $query = "INSERT INTO events (title, description, hosted_by, datetime, capacity, created_by) VALUES (:title, :description, :hosted_by, :datetime, :capacity, :created_by)";
@@ -53,7 +53,7 @@ class Event
 
     public function update($id, $array)
     {
-        $query = "UPDATE events SET title = :title, description = :description, hosted_by = :hosted_by, datetime = :datetime, capacity = :capacity WHERE id = :id";
+        $query = "UPDATE events SET title = :title, description = :description, hosted_by = :hosted_by, datetime = :datetime, capacity = :capacity WHERE id = :id AND created_by = " . $_SESSION['user']['id'];
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':title', $array['title']);
         $stmt->bindParam(':description', $array['description']);
@@ -79,6 +79,7 @@ class Event
     {
         $query = "SELECT events.*, COUNT(attendee_events.id) as total FROM events 
         LEFT JOIN attendee_events ON events.id = attendee_events.event_id 
+        WHERE created_by = :created_by
         GROUP BY events.id 
         ORDER BY events.datetime DESC 
         LIMIT :limit OFFSET :offset";
@@ -86,6 +87,7 @@ class Event
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':created_by', $_SESSION['user']['id']);
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -93,8 +95,22 @@ class Event
 
     public function count()
     {
-        $query = "SELECT COUNT(*) as total FROM events";
-        $stmt = $this->conn->query($query);
+        $query = "SELECT COUNT(*) as total FROM events WHERE created_by = :created_by";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':created_by', $_SESSION['user']['id']);
+        $stmt->execute();
         return (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    public function findByEventId($event_id)
+    {
+        $query = "SELECT attendees.name, attendees.mobile_no, attendee_events.no_of_person FROM attendee_events
+        INNER JOIN events ON attendee_events.event_id = events.id
+        INNER JOIN attendees ON attendees.id = attendee_events.attendee_id WHERE events.id = :event_id AND created_by = :created_by ORDER BY attendee_events.id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':event_id', $event_id);
+        $stmt->bindParam(':created_by', $_SESSION['user']['id']);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

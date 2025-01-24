@@ -25,12 +25,12 @@ class Attendee
         return $stmt->execute();
     }
 
-    public function join($event_id, $attendee, $array)
+    public function join($array)
     {
         $query = "INSERT INTO attendee_events (attendee_id, event_id, no_of_person) VALUES (:attendee_id, :event_id, :no_of_person)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':attendee_id', $attendee['id']);
-        $stmt->bindParam(':event_id', $event_id);
+        $stmt->bindParam(':attendee_id', $array['attendee_id']);
+        $stmt->bindParam(':event_id', $array['event_id']);
         $stmt->bindParam(':no_of_person', $array['no_of_person']);
         return $stmt->execute();
     }
@@ -63,14 +63,11 @@ class Attendee
 
     public function findByEventId($event_id)
     {
-        $query = "SELECT a.name, a.mobile_no, ae.no_of_person 
-                 FROM attendees a 
-                 JOIN attendee_events ae ON a.id = ae.attendee_id 
-                 WHERE ae.event_id = :event_id 
-                 ORDER BY ae.created_at DESC";
+        $query = "SELECT events.id, title, description, hosted_by, datetime, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
+        LEFT JOIN attendee_events ON attendee_events.event_id = events.id WHERE events.id = :event_id GROUP BY events.id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':event_id', $event_id);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

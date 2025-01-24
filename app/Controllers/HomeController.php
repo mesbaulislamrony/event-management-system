@@ -19,9 +19,28 @@ class HomeController
 
     public function index()
     {
-        $query = "SELECT events.id, title, description, hosted_by, datetime, capacity, SUM(attendee_events.no_of_person) as total FROM events
-        LEFT JOIN attendee_events ON attendee_events.event_id = events.id GROUP BY events.id ORDER BY events.id DESC";
-        $stmt = $this->conn->query($query);
+        $searchKeyword = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+        $query = "SELECT events.id, title, description, hosted_by, datetime, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total 
+        FROM events 
+        LEFT JOIN attendee_events ON attendee_events.event_id = events.id";
+
+        if ($searchKeyword) {
+            $query .= " WHERE events.title LIKE :keyword 
+                       OR events.description LIKE :keyword 
+                       OR events.hosted_by LIKE :keyword";
+        }
+
+        $query .= " GROUP BY events.id ORDER BY events.datetime DESC";
+
+        $stmt = $this->conn->prepare($query);
+
+        if ($searchKeyword) {
+            $searchTerm = "%{$searchKeyword}%";
+            $stmt->bindValue(':keyword', $searchTerm, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(function ($event) {

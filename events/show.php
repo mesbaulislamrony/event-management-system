@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 <input type="hidden" name="id" value="<?= $event["id"] ?>">
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
+            <a href="/events/index.php" class="btn btn-secondary">Cancel</a>
         </div>
     </div>
 </section>

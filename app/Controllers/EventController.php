@@ -3,24 +3,15 @@
 namespace App\Controllers;
 
 use App\Models\Event;
-use App\Models\Attendee;
 use Carbon\Carbon;
 
 class EventController
 {
     private $eventModel;
-    private $attendeeModel;
 
     public function __construct($db)
     {
         $this->eventModel = new Event($db);
-        $this->attendeeModel = new Attendee($db);
-    }
-
-    public function create($array)
-    {
-        $this->eventModel->create($array);
-        header("Location: /events/create.php");
     }
 
     public function index()
@@ -46,16 +37,9 @@ class EventController
         ];
     }
 
-    public function delete($id)
+    public function create($array)
     {
-        $this->eventModel->destroy($id);
-        header("Location: /events/index.php");
-    }
-
-    public function update($id, $array)
-    {
-        $this->eventModel->update($id, $array);
-        header("Location: /events/edit.php?id=" . $id);
+        return $this->eventModel->store($array);
     }
 
     public function edit($id)
@@ -69,5 +53,39 @@ class EventController
         $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
         $event['available'] = ($event['capacity'] - $event['total']);
         return $event;
+    }
+
+    public function update($id, $array)
+    {
+        $this->eventModel->update($id, $array);
+        header("Location: /events/edit.php?id=" . $id);
+    }
+
+    public function download($id)
+    {
+        $result = $this->eventModel->findByEventId($id);
+        if (!empty($result)) {
+            $filename = "attendees_" . date('Y-m-d_H-i-s') . ".csv";
+            header('Content-Type: application/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            
+            $output = fopen('php://output', 'w');
+            fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+            fputcsv($output, ['Name', 'Mobile No', 'No Of Person']);
+            
+            foreach ($result as $row) {
+                fputcsv($output, [
+                    $row['name'],
+                    $row['mobile_no'],
+                    $row['no_of_person']
+                ]);
+            }
+            
+            fclose($output);
+            exit();
+        }
+        
+        header("Location: /events/show.php?id=" . $id);
+        exit();
     }
 }

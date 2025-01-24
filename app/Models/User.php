@@ -15,19 +15,22 @@ class User
 
     public function register($array)
     {
-        // Check if mobile number already exists
-        if (!empty($this->findByMobileNo($array['mobile_no']))) {
+        $query = "SELECT COUNT(*) as total FROM users WHERE mobile_no = :mobile_no";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':mobile_no', $array['mobile_no']);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result['total'] > 0) {
+            $_SESSION['error'] = 'Mobile number already exists';
             return false;
-            exit();
         }
 
-        $array['password'] = (array_key_exists('password', $array)) ? $array['password'] : "12345678";
-        $array['password'] = password_hash($array['password'], PASSWORD_BCRYPT);
         $query = "INSERT INTO users (name, mobile_no, password) VALUES (:name, :mobile_no, :password)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':name', $array['name']);
         $stmt->bindParam(':mobile_no', $array['mobile_no']);
-        $stmt->bindParam(':password', $array['password']);
+        $stmt->bindParam(':password', password_hash($array['password'], PASSWORD_DEFAULT));
         return $stmt->execute();
     }
 

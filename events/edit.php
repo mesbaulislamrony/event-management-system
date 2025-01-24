@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     <div class="mb-3">
                         <label for="hosted_by" class="form-label">Hosted By*</label>
                         <input type="text" class="form-control" name="hosted_by" value="<?= $event['hosted_by'] ?>" id="hosted_by" placeholder="Write host name">
-                        <div id="hostedby-error" class="error-message d-none"></div>
+                        <div id="hosted-error" class="error-message d-none"></div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <a href="/events/index.php" class="btn btn-secondary">Cancel</a>
                 </form>
             </div>
         </div>
@@ -62,21 +63,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     </div>
 </section>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('#eventForm');
     const titleInput = document.getElementById('title');
     const hostedByInput = document.getElementById('hosted_by');
     const datetimeInput = document.getElementById('datetime');
     const capacityInput = document.getElementById('capacity');
 
-    // Show error message function
     const showError = (element, errorDiv, message) => {
         element.classList.add('is-invalid');
         errorDiv.textContent = message;
         errorDiv.classList.remove('d-none');
     };
 
-    // Hide error message function
     const hideError = (element, errorDiv) => {
         element.classList.remove('is-invalid');
         errorDiv.classList.add('d-none');
@@ -85,13 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         let hasErrors = false;
 
-        // Reset all error messages
         const errorDivs = document.querySelectorAll('.error-message');
         errorDivs.forEach(err => {
             err.classList.add('d-none');
         });
 
-        // Title validation
         if (!titleInput.value.trim()) {
             showError(titleInput, document.getElementById('title-error'), 'Title is required');
             hasErrors = true;
@@ -99,38 +95,33 @@ document.addEventListener('DOMContentLoaded', function() {
             hideError(titleInput, document.getElementById('title-error'));
         }
 
-        // Hosted By validation
         if (!hostedByInput.value.trim()) {
-            showError(hostedByInput, document.getElementById('hostedby-error'), 'Host name is required');
+            showError(hostedByInput, document.getElementById('hosted-error'), 'Hosted By is required');
             hasErrors = true;
         } else {
-            hideError(hostedByInput, document.getElementById('hostedby-error'));
+            hideError(hostedByInput, document.getElementById('hosted-error'));
         }
 
-        // Datetime validation
-        if (!datetimeInput.value) {
-            showError(datetimeInput, document.getElementById('datetime-error'), 'Event datetime is required');
+        if (!datetimeInput.value.trim()) {
+            showError(datetimeInput, document.getElementById('datetime-error'), 'Datetime is required');
             hasErrors = true;
+        } else {
+            hideError(datetimeInput, document.getElementById('datetime-error'));
         }
 
-        // Capacity validation
         if (!capacityInput.value.trim()) {
-            showError(capacityInput, document.getElementById('capacity-error'), 'Seat capacity is required');
+            showError(capacityInput, document.getElementById('capacity-error'), 'Capacity is required');
+            hasErrors = true;
+        } else if (parseInt(capacityInput.value) <= 0) {
+            showError(capacityInput, document.getElementById('capacity-error'), 'Capacity must be greater than 0');
             hasErrors = true;
         } else {
-            const capacity = parseInt(capacityInput.value);
-            if (isNaN(capacity) || capacity <= 0) {
-                showError(capacityInput, document.getElementById('capacity-error'), 'Seat capacity must be a positive number');
-                hasErrors = true;
-            } else {
-                hideError(capacityInput, document.getElementById('capacity-error'));
-            }
+            hideError(capacityInput, document.getElementById('capacity-error'));
         }
 
         if (hasErrors) {
             e.preventDefault();
         }
     });
-});
 </script>
 <?php require '../layouts/footer.php'; ?>
