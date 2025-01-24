@@ -46,18 +46,6 @@ The Event Management System is a robust platform that allows users to create, ma
 - Apache/Nginx web server
 - Composer (for dependency management)
 
-### Database Setup
-
-1. Create a new MySQL database:
-```sql
-CREATE DATABASE your_database_name;
-```
-
-2. Import the database schema:
-```bash
-mysql -u your_username -p your_database_name < database.sql
-```
-
 ### Application Setup
 
 1. Clone the repository:
@@ -75,6 +63,18 @@ cd event-management-system
      $username = 'your_username';
      $password = 'your_password';
      ```
+
+### Database Setup
+
+1. Create a new MySQL database:
+```sql
+CREATE DATABASE your_database_name;
+```
+
+2. Import the database schema:
+```bash
+mysql -u your_username -p your_database_name < database.sql
+```
 
 ## Login Credentials
 
