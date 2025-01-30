@@ -47,9 +47,18 @@ class EventController
         return $this->eventModel->find($id);
     }
 
+    public function delete($id)
+    {
+        return $this->eventModel->destroy($id);
+    }
+
     public function show($id)
     {
         $event = $this->eventModel->find($id);
+        if(empty($event))
+        {
+            return [];
+        }
         $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
         $event['available'] = ($event['capacity'] - $event['total']);
         return $event;

@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 <section class="container">
     <div class="card border-0" style="margin:50px 0">
         <div class="card-body px-0">
+            <?php if(!empty($event)) { ?>
             <h5 class="card-title"><?= $event['title'] ?></h5>
             <p class="card-text"><?= $event['description'] ?></p>
             <p class="mb-1">Hosted By : <?= $event['hosted_by'] ?></p>
@@ -33,6 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 <input type="hidden" name="id" value="<?= $event["id"] ?>">
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
+            <?php } else { ?>
+                <p class="mb-3">Event not found</p>
+            <?php } ?>
             <a href="/events/index.php" class="btn btn-secondary">Cancel</a>
         </div>
     </div>
