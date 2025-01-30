@@ -33,25 +33,20 @@ A simple event management system built with PHP that allows users to create and 
 - Session-based authentication
 - User-specific data access control
 
-## Setup Instructions
+## Run Locally
 
 1. Clone the repository
-2. Create a MySQL database
+2. Create a MySQL database `eventshub`
 3. Import the database schema from `database.sql`
 4. Configure database connection in `config/database.php`
 5. Ensure PHP 7.4+ and MySQL 5.7+ are installed
 6. Point your web server to the project directory
+7. Go to the project directory `cd event-management-system`
+8. Open terminal and update composer `composer update`
 
-## Database Configuration
+## Live Project
 
-Update the database configuration in `config/database.php`:
-
-```php
-private $host = "localhost";
-private $database = "your_database_name";
-private $username = "your_username";
-private $password = "your_password";
-```
+To visit live project on [Click Here](https://mesbaul.binfosys.solutions)
 
 ## Default Login Credentials
 
@@ -73,18 +68,20 @@ Password: 12345678
 
 ```
 event-management-system/
+├── api/
 ├── app/
-│   ├── Config/
 │   ├── Controllers/
 │   │   └── Api/
+│   └── Middleware/
 │   └── Models/
+├── assets/
 ├── auth/
+├── config/
+├── error/
 ├── events/
 ├── layouts/
 ├── vendor/
-├── config/
-├── api/
-└── public/
+├── index.php
 ```
 
 ## Contributing
