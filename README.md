@@ -56,8 +56,8 @@ private $password = "your_password";
 ## Default Login Credentials
 
 ```
-Mobile No: 01717171717
-Password: password
+Mobile No: 01738120411
+Password: 12345678
 ```
 
 ## Technologies Used
