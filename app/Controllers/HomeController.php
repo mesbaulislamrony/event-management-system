@@ -58,6 +58,10 @@ class HomeController
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $event = $stmt->fetch(PDO::FETCH_ASSOC);
+        if(empty($event))
+        {
+            return [];
+        }
         $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
         $event['available'] = ($event['capacity'] - $event['total']);
         return $event;

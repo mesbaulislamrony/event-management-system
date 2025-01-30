@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     <div class="row">
         <div class="col-md-6">
             <div class="card border-0" style="margin:50px 0">
+                <?php if(!empty($event)) { ?>
                 <div class="card-header border-0 bg-transparent px-0">Edit event</div>
                 <form id="eventForm" method="POST" action="" class="card-body px-0">
                     <div class="mb-3">
@@ -57,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <a href="/events/index.php" class="btn btn-secondary">Cancel</a>
                 </form>
+                <?php } else { ?>
+                    <p class="mb-3">Event not found</p>
+                <?php } ?>
             </div>
         </div>
         <div class="col-md-4">&nbsp;</div>
