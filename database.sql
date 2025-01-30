@@ -10,9 +10,6 @@ CREATE TABLE users (
     INDEX idx_mobile_no (mobile_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- default user
-INSERT INTO users (name, mobile_no, password) VALUES ('John Doe', '01717171717', '$2y$10$CofyLzwKzcSx1LbttHKaNe/tjdDfZqCYsjj.zwDUC9TD2c8XB1Kp6');
-
 -- Events table
 DROP TABLE IF EXISTS events;
 CREATE TABLE events (
@@ -20,12 +17,15 @@ CREATE TABLE events (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     hosted_by VARCHAR(100) NOT NULL,
-    datetime DATETIME NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
     capacity INT NOT NULL,
     created_by INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_datetime (datetime),
+    INDEX idx_date (date),
     INDEX idx_created_by (created_by),
     CONSTRAINT fk_events_user 
         FOREIGN KEY (created_by) 

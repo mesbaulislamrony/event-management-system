@@ -63,7 +63,7 @@ class Attendee
 
     public function findByEventId($event_id)
     {
-        $query = "SELECT events.id, title, description, hosted_by, datetime, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
+        $query = "SELECT events.id, title, description, hosted_by, date, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
         LEFT JOIN attendee_events ON attendee_events.event_id = events.id WHERE events.id = :event_id GROUP BY events.id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':event_id', $event_id);

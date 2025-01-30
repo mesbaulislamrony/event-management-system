@@ -26,7 +26,7 @@ class EventController
         
         return [
             'events' => array_map(function ($event) {
-                $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
+                $event['datetime'] = Carbon::parse($event['date'])->toFormattedDateString() . " " . Carbon::parse($event['start_time'])->format('h:i A') . " - ". Carbon::parse($event['end_time'])->format('h:i A');
                 $event['available'] = ($event['capacity'] - $event['total']);
                 return $event;
             }, $events),
@@ -59,7 +59,7 @@ class EventController
         {
             return [];
         }
-        $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
+        $event['datetime'] = Carbon::parse($event['date'])->toFormattedDateString() . " " . Carbon::parse($event['start_time'])->format('h:i A') . " - ". Carbon::parse($event['end_time'])->format('h:i A');
         $event['available'] = ($event['capacity'] - $event['total']);
         return $event;
     }

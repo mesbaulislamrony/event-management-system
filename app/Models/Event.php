@@ -16,13 +16,18 @@ class Event
 
     public function store($array)
     {
-        $array['datetime'] = Carbon::parse($array['datetime'])->format('Y-m-d H:i:s');
-        $query = "INSERT INTO events (title, description, hosted_by, datetime, capacity, created_by) VALUES (:title, :description, :hosted_by, :datetime, :capacity, :created_by)";
+        $array['date'] = Carbon::parse($array['date'])->format('Y-m-d');
+        $array['start_time'] = Carbon::parse($array['start_time'])->format('H:i:s');
+        $array['end_time'] = Carbon::parse($array['end_time'])->format('H:i:s');
+        $query = "INSERT INTO events (title, description, hosted_by, location, date, start_time, end_time, capacity, created_by) VALUES (:title, :description, :hosted_by, :location, :date, :start_time, :end_time, :capacity, :created_by)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':title', $array['title']);
         $stmt->bindParam(':description', $array['description']);
         $stmt->bindParam(':hosted_by', $array['hosted_by']);
-        $stmt->bindParam(':datetime', $array['datetime']);
+        $stmt->bindParam(':location', $array['location']);
+        $stmt->bindParam(':date', $array['date']);
+        $stmt->bindParam(':start_time', $array['start_time']);
+        $stmt->bindParam(':end_time', $array['end_time']);
         $stmt->bindParam(':capacity', $array['capacity']);
         $stmt->bindParam(':created_by', $_SESSION['user']['id']);
         $stmt->execute();
@@ -53,12 +58,18 @@ class Event
 
     public function update($id, $array)
     {
-        $query = "UPDATE events SET title = :title, description = :description, hosted_by = :hosted_by, datetime = :datetime, capacity = :capacity WHERE id = :id AND created_by = " . $_SESSION['user']['id'];
+        $array['date'] = Carbon::parse($array['date'])->format('Y-m-d');
+        $array['start_time'] = Carbon::parse($array['start_time'])->format('H:i:s');
+        $array['end_time'] = Carbon::parse($array['end_time'])->format('H:i:s');
+        $query = "UPDATE events SET title = :title, description = :description, hosted_by = :hosted_by, location = :location, date = :date, start_time = :start_time, end_time = :end_time, capacity = :capacity WHERE id = :id AND created_by = " . $_SESSION['user']['id'];
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':title', $array['title']);
         $stmt->bindParam(':description', $array['description']);
         $stmt->bindParam(':hosted_by', $array['hosted_by']);
-        $stmt->bindParam(':datetime', $array['datetime']);
+        $stmt->bindParam(':location', $array['location']);
+        $stmt->bindParam(':date', $array['date']);
+        $stmt->bindParam(':start_time', $array['start_time']);
+        $stmt->bindParam(':end_time', $array['end_time']);
         $stmt->bindParam(':capacity', $array['capacity']);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
@@ -66,7 +77,7 @@ class Event
 
     public function find($id)
     {
-        $query = "SELECT events.id, title, description, hosted_by, datetime, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
+        $query = "SELECT events.id, title, description, hosted_by, location, date, start_time, end_time, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
         LEFT JOIN attendee_events ON attendee_events.event_id = events.id WHERE events.id = :id AND created_by = :created_by GROUP BY events.id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
@@ -77,13 +88,10 @@ class Event
 
     public function paginate($offset, $perPage)
     {
-        $query = "SELECT events.*, COUNT(attendee_events.id) as total FROM events 
-        LEFT JOIN attendee_events ON events.id = attendee_events.event_id 
-        WHERE created_by = :created_by
-        GROUP BY events.id 
-        ORDER BY events.datetime DESC 
+        $query = "SELECT events.id, title, description, hosted_by, location, date, start_time, end_time, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
+        LEFT JOIN attendee_events ON attendee_events.event_id = events.id WHERE created_by = :created_by GROUP BY events.id
+        ORDER BY events.date DESC 
         LIMIT :limit OFFSET :offset";
-        
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);

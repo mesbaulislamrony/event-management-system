@@ -26,19 +26,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" name="description" id="description" placeholder="Write description"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="hosted_by" class="form-label">Hosted By*</label>
-                        <input type="text" class="form-control" name="hosted_by" id="hosted_by" placeholder="Write host name">
-                        <div id="hosted-error" class="error-message d-none"></div>
+                        <textarea class="form-control" name="description" id="description" placeholder="Write description" rows="5"></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="datetime" class="form-label">Event datetime*</label>
-                                <input type="datetime-local" name="datetime" class="form-control" id="datetime">
-                                <div id="datetime-error" class="error-message d-none"></div>
+                                <label for="hosted_by" class="form-label">Hosted By*</label>
+                                <input type="text" class="form-control" name="hosted_by" id="hosted_by" placeholder="Write host name">
+                                <div id="hosted-error" class="error-message d-none"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location*</label>
+                                <input type="text" class="form-control" name="location" id="location" placeholder="Write event location">
+                                <div id="location-error" class="error-message d-none"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Event date*</label>
+                                <input type="date" name="date" class="form-control" id="date">
+                                <div id="date-error" class="error-message d-none"></div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -46,6 +57,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="capacity" class="form-label">Seat Capacity*</label>
                                 <input type="number" name="capacity" class="form-control" id="capacity" placeholder="Write seat capacity">
                                 <div id="capacity-error" class="error-message d-none"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="start_time" class="form-label">Event start time*</label>
+                                <input type="time" name="start_time" class="form-control" id="start_time">
+                                <div id="start-time-error" class="error-message d-none"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="end_time" class="form-label">Event end time*</label>
+                                <input type="time" name="end_time" class="form-control" id="end_time">
+                                <div id="end-time-error" class="error-message d-none"></div>
                             </div>
                         </div>
                     </div>
@@ -60,8 +87,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     const form = document.querySelector('#eventForm');
     const titleInput = document.getElementById('title');
     const hostedByInput = document.getElementById('hosted_by');
-    const datetimeInput = document.getElementById('datetime');
+    const locationInput = document.getElementById('location');
+    const dateInput = document.getElementById('date');
     const capacityInput = document.getElementById('capacity');
+    const startTimeInput = document.getElementById('start_time');
+    const endTimeInput = document.getElementById('end_time');
 
     const showError = (element, errorDiv, message) => {
         element.classList.add('is-invalid');
@@ -96,9 +126,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             hideError(hostedByInput, document.getElementById('hosted-error'));
         }
 
-        if (!datetimeInput.value.trim()) {
-            showError(datetimeInput, document.getElementById('datetime-error'), 'Datetime is required');
+        if (!locationInput.value.trim()) {
+            showError(locationInput, document.getElementById('location-error'), 'Location is required');
             hasErrors = true;
+        } else {
+            hideError(locationInput, document.getElementById('location-error'));
+        }
+
+        if (!dateInput.value.trim()) {
+            showError(dateInput, document.getElementById('date-error'), 'Date is required');
+            hasErrors = true;
+        } else {
+            hideError(dateInput, document.getElementById('date-error'));
+        }
+
+
+        if (!startTimeInput.value.trim()) {
+            showError(startTimeInput, document.getElementById('start-time-error'), 'Start time is required');
+            hasErrors = true;
+        } else {
+            hideError(startTimeInput, document.getElementById('start-time-error'));
+        }
+
+
+        if (!endTimeInput.value.trim()) {
+            showError(endTimeInput, document.getElementById('end-time-error'), 'End time is required');
+            hasErrors = true;
+        } else {
+            hideError(endTimeInput, document.getElementById('end-time-error'));
         }
 
         if (!capacityInput.value.trim()) {

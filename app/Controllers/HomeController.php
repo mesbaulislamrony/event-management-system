@@ -21,7 +21,7 @@ class HomeController
     {
         $searchKeyword = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-        $query = "SELECT events.id, title, description, hosted_by, datetime, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total 
+        $query = "SELECT events.id, title, description, hosted_by, date, start_time, end_time, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total 
         FROM events 
         LEFT JOIN attendee_events ON attendee_events.event_id = events.id";
 
@@ -31,7 +31,7 @@ class HomeController
                        OR events.hosted_by LIKE :keyword";
         }
 
-        $query .= " GROUP BY events.id ORDER BY events.datetime DESC";
+        $query .= " GROUP BY events.id ORDER BY events.date DESC";
 
         $stmt = $this->conn->prepare($query);
 
@@ -44,7 +44,7 @@ class HomeController
         $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return array_map(function ($event) {
-            $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
+            $event['datetime'] = Carbon::parse($event['date'])->toFormattedDateString() . " " . Carbon::parse($event['start_time'])->format('h:i A') . " - ". Carbon::parse($event['end_time'])->format('h:i A');
             $event['available'] = ($event['capacity'] - $event['total']);
             return $event;
         }, $events);
@@ -52,7 +52,7 @@ class HomeController
 
     public function find($id)
     {
-        $query = "SELECT events.id, title, description, hosted_by, datetime, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
+        $query = "SELECT events.id, title, description, hosted_by, date, start_time, end_time, capacity, IFNULL(SUM(attendee_events.no_of_person), 0) as total FROM events
         LEFT JOIN attendee_events ON attendee_events.event_id = events.id WHERE events.id = :id GROUP BY events.id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
@@ -62,7 +62,7 @@ class HomeController
         {
             return [];
         }
-        $event['datetime'] = Carbon::parse($event['datetime'])->toDayDateTimeString();
+        $event['datetime'] = Carbon::parse($event['date'])->toFormattedDateString() . " " . Carbon::parse($event['start_time'])->format('h:i A') . " - ". Carbon::parse($event['end_time'])->format('h:i A');
         $event['available'] = ($event['capacity'] - $event['total']);
         return $event;
     }
